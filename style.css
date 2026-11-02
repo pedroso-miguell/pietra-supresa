@@ -1,0 +1,789 @@
+* {
+      box-sizing: border-box;
+      margin: 0
+    }
+
+    html,
+    body {
+      height: 100%;
+      overflow: hidden;
+      background: radial-gradient(ellipse at 50% 110%, #5a1a4a, #1a0a1c 70%);
+      color: #fde8ee;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 20px;
+      -webkit-text-size-adjust: 100%
+    }
+
+    #fundo {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%
+    }
+
+    .ato {
+      position: fixed;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.2rem;
+      padding: 1rem;
+      text-align: center;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 1.2s, visibility 0s 1.2s
+    }
+
+    .ato.on {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transition: opacity 1.2s
+    }
+
+    .script {
+      font-family: 'Great Vibes', cursive, Georgia;
+      font-weight: 400
+    }
+
+    .go {
+      font: inherit;
+      font-weight: 600;
+      color: #3a1237;
+      background: linear-gradient(135deg, #ffdca8, #ffb3c6);
+      border: 0;
+      border-radius: 999px;
+      padding: .7rem 2rem;
+      cursor: pointer;
+      box-shadow: 0 0 28px #ff7a9c66;
+    }
+
+    .go:disabled {
+      opacity: .5
+    }
+
+    .oculto {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .9s
+    }
+
+    .oculto.on {
+      opacity: 1;
+      pointer-events: auto
+    }
+
+    /* Ato 1: envelope e carta */
+    .aviso {
+      font-size: 1.25rem;
+      font-style: italic;
+      opacity: .85;
+      transition: opacity .6s
+    }
+
+    .env {
+      position: relative;
+      width: min(86vw, 340px);
+      height: calc(min(86vw, 340px)*.667);
+      cursor: pointer;
+      filter: drop-shadow(0 18px 28px #0009);
+      animation: balanca 2.6s ease-in-out infinite;
+      transition: transform 1s .6s, opacity .8s 1s
+    }
+
+    @keyframes balanca {
+      50% {
+        transform: rotate(-2deg) translateY(-6px)
+      }
+    }
+
+    .env>div {
+      position: absolute
+    }
+
+    .costas {
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      background: #b8344f;
+      border-radius: 6px
+    }
+
+    .folha {
+      left: 6%;
+      right: 6%;
+      top: 8%;
+      bottom: 6%;
+      background: #fff1ef;
+      border-radius: 4px;
+      transition: transform .9s .55s;
+      z-index: 1
+    }
+
+    .frente {
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      background: #e0526e;
+      -webkit-clip-path: polygon(0 0, 50% 54%, 100% 0, 100% 100%, 0 100%);
+      clip-path: polygon(0 0, 50% 54%, 100% 0, 100% 100%, 0 100%);
+      border-radius: 6px;
+      z-index: 2
+    }
+
+    .aba {
+      left: 0;
+      top: 0;
+      right: 0;
+      height: 56%;
+      background: #c9405b;
+      -webkit-clip-path: polygon(0 0, 100% 0, 50% 100%);
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+      -webkit-transform-origin: top;
+      transform-origin: top;
+      transition: transform .7s;
+      z-index: 3
+    }
+
+    .selo {
+      left: 50%;
+      top: 43%;
+      width: 46px;
+      height: 46px;
+      margin-left: -23px;
+      border-radius: 50%;
+      background: #7d1230;
+      z-index: 4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffd1dc;
+      font-size: 1.3rem;
+      transition: opacity .3s;
+      box-shadow: 0 3px 8px #0006
+    }
+
+    .env.aberto {
+      animation: none;
+      pointer-events: none
+    }
+
+    .env.aberto .aba {
+      transform: rotateX(180deg);
+      z-index: 0;
+      transition: transform .7s, z-index 0s .35s
+    }
+
+    .env.aberto .selo {
+      opacity: 0
+    }
+
+    .env.aberto .folha {
+      transform: translateY(-62%)
+    }
+
+    .env.some {
+      opacity: 0;
+      transform: translateY(40vh)
+    }
+
+    #papel {
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      width: min(92vw, max(460px, 48vmin));
+      max-height: 84vh;
+      overflow: auto;
+      padding: 2rem 1.8rem;
+      background: #fff1ef;
+      color: #4a1f2e;
+      border-radius: 6px;
+      box-shadow: 0 25px 60px #000b;
+      transform: translate(-50%, -40%) scale(.85);
+      opacity: 0;
+      pointer-events: none;
+      transition: all .9s;
+      z-index: 5;
+      text-align: left
+    }
+
+    #papel.on {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1
+    }
+
+    #texto {
+      font-size: clamp(1.35rem, 4.6vw, 1.65rem);
+      line-height: 1.45;
+      font-style: italic;
+      font-weight: 600;
+      white-space: pre-wrap;
+      min-height: 6rem
+    }
+
+    #texto::after {
+      content: "|";
+      opacity: .5;
+      animation: pisca 1s steps(1) infinite
+    }
+
+    #papel.fim #texto::after {
+      content: ""
+    }
+
+    @keyframes pisca {
+      50% {
+        opacity: 0
+      }
+    }
+
+    #ass {
+      margin-top: .8rem;
+      font-size: 2.2rem;
+      color: #b8344f;
+      text-align: right;
+      opacity: 0;
+      transition: opacity 1.5s
+    }
+
+    #papel.fim #ass {
+      opacity: 1
+    }
+
+    #b1 {
+      position: fixed;
+      left: 50%;
+      bottom: max(1.2rem, env(safe-area-inset-bottom));
+      margin-left: -4.5rem;
+      z-index: 6
+    }
+
+    /* Ato 2: constelação e flores */
+    #dica {
+      opacity: .7;
+      font-style: italic;
+      transition: opacity 1s
+    }
+
+    .cena {
+      position: relative;
+      width: min(92vw, 58vh);
+      height: min(107vw, 68vh)
+    }
+
+    @media (orientation:landscape) {
+      .cena {
+        width: min(70vw, 84vh);
+        height: min(63vw, 76vh)
+      }
+    }
+
+    #svgl {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%
+    }
+
+    #linha {
+      fill: none;
+      stroke: #ffdca8;
+      stroke-width: 1.6;
+      stroke-linecap: round;
+      vector-effect: non-scaling-stroke;
+      filter: drop-shadow(0 0 4px #ffdca8)
+    }
+
+    .estrela {
+      position: absolute;
+      width: 48px;
+      height: 48px;
+      margin: -24px 0 0 -24px;
+      border: 0;
+      border-radius: 50%;
+      background: none;
+      cursor: pointer;
+      opacity: .35;
+      pointer-events: none;
+    }
+
+    .estrela::before {
+      content: "";
+      position: absolute;
+      left: 15px;
+      top: 15px;
+      right: 15px;
+      bottom: 15px;
+      border-radius: 50%;
+      background: #fde8ee;
+      box-shadow: 0 0 12px 3px #fde8ee88;
+      transition: all .6s
+    }
+
+    .estrela.prox {
+      opacity: 1;
+      pointer-events: auto
+    }
+
+    .estrela.prox::before {
+      background: #ff7a9c;
+      box-shadow: 0 0 18px 6px #ff7a9caa;
+      animation: pulsa 1.6s ease-in-out infinite
+    }
+
+    .estrela.feita {
+      opacity: 1;
+      pointer-events: none
+    }
+
+    .estrela.feita::before {
+      background: #ffdca8;
+      box-shadow: 0 0 22px 7px #ffdca8aa
+    }
+
+    @keyframes pulsa {
+      50% {
+        transform: scale(1.7)
+      }
+    }
+
+    #tela {
+      position: fixed;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 30;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: .8rem;
+      padding: 1rem;
+      background: #1a0a1cf0;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity .8s, visibility 0s .8s
+    }
+
+    #tela.on {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transition: opacity .8s
+    }
+
+    #flor {
+      height: min(52vh, 440px);
+      width: calc(min(52vh, 440px)*.625);
+      overflow: visible
+    }
+
+    #flor .d {
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+      animation: desenha var(--t, .9s) ease forwards;
+      animation-delay: var(--a, 0s)
+    }
+
+    #flor .f {
+      fill-opacity: 0;
+      animation: desenha var(--t, .9s) ease forwards, enche .9s ease forwards;
+      animation-delay: var(--a, 0s), calc(var(--a, 0s) + var(--t, .9s)*.7)
+    }
+
+    #flor .v {
+      stroke: #8fe3b0;
+      fill: #8fe3b0
+    }
+
+    #flor .r {
+      stroke: #c9a98a
+    }
+
+    #flor .m {
+      -webkit-transform-box: fill-box;
+      transform-box: fill-box;
+      transform-origin: center;
+      transform: scale(0);
+      animation: pop .6s cubic-bezier(.3, 1.6, .5, 1) forwards;
+      animation-delay: var(--a)
+    }
+
+    @keyframes desenha {
+      to {
+        stroke-dashoffset: 0
+      }
+    }
+
+    @keyframes enche {
+      to {
+        fill-opacity: .5
+      }
+    }
+
+    @keyframes pop {
+      to {
+        transform: scale(1)
+      }
+    }
+
+    #txt {
+      font-size: clamp(1.25rem, 3.4vw, 1.6rem);
+      font-style: italic;
+      line-height: 1.45;
+      width: min(92vw, 500px);
+      min-height: 4.4rem;
+      opacity: 0;
+      transition: opacity 1.2s
+    }
+
+    #txt.on {
+      opacity: 1
+    }
+
+    #final {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 50%;
+      margin-top: -6rem;
+      padding: 0 1.5rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 2s
+    }
+
+    #final.on {
+      opacity: 1
+    }
+
+    #final h2 {
+      font-size: clamp(2.6rem, 9vw, 4rem);
+      line-height: 1.1;
+      text-shadow: 0 0 30px #ff7a9caa
+    }
+
+    #final p {
+      margin-top: .8rem;
+      opacity: .9
+    }
+
+    #final .ass {
+      font-size: 2rem;
+      color: #ffdca8
+    }
+
+    #b2 {
+      position: fixed;
+      left: 50%;
+      bottom: max(1.2rem, env(safe-area-inset-bottom));
+      margin-left: -5.5rem;
+      z-index: 6
+    }
+
+    /* Ato 3: bolo */
+    #pedido {
+      font-size: clamp(2rem, 7vw, 2.8rem);
+      max-width: 16ch;
+      line-height: 1.15;
+      transition: opacity 1s
+    }
+
+    .festa #pedido,
+    .festa #soprar {
+      opacity: 0;
+      pointer-events: none
+    }
+
+    .bolo {
+      position: relative;
+      width: 24em;
+      height: 21em;
+      margin-top: 3em;
+      font-size: clamp(9px, min(3vw, 2.6vh), 20px)
+    }
+
+    .bolo div {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%)
+    }
+
+    .andar {
+      border-radius: 1em 1em .6em .6em
+    }
+
+    .a1 {
+      bottom: 1.2em;
+      width: 24em;
+      height: 7.2em;
+      background: radial-gradient(circle at 1.1em 0, #fff7f0 1.1em, transparent 1.2em) 0 0/2.2em 2.8em repeat-x, #f06a8d
+    }
+
+    .a2 {
+      bottom: 8.4em;
+      width: 17.6em;
+      height: 6.2em;
+      background: radial-gradient(circle at 1.1em 0, #fff7f0 1.1em, transparent 1.2em) 0 0/2.2em 2.8em repeat-x, #ffb3c6
+    }
+
+    .a3 {
+      bottom: 14.6em;
+      width: 11.6em;
+      height: 5.2em;
+      background: radial-gradient(circle at 1.1em 0, #fff7f0 1.1em, transparent 1.2em) 0 0/2.2em 2.8em repeat-x, #ffdca8
+    }
+
+    .prato {
+      bottom: 0;
+      width: 29em;
+      height: 1.4em;
+      border-radius: 50%;
+      background: #fde8ee
+    }
+
+    .bolo .vela {
+      position: absolute;
+      bottom: 19.8em;
+      width: .7em;
+      height: 3em;
+      margin-left: -.35em;
+      background: repeating-linear-gradient(135deg, #fff 0, #fff .5em, #ff7a9c .5em, #ff7a9c 1em);
+      border-radius: 2px;
+      transform: none
+    }
+
+    .chama {
+      position: absolute;
+      left: 50%;
+      top: -1.9em;
+      width: 1.2em;
+      height: 1.8em;
+      margin-left: -.6em;
+      border-radius: 50% 50% 50% 50%/65% 65% 35% 35%;
+      background: radial-gradient(#fff6c8 20%, #ffb347 75%);
+      box-shadow: 0 0 1.8em .8em #ffb34788;
+      transform-origin: 50% 100%;
+      animation: tremula .35s ease-in-out infinite alternate;
+      transition: opacity .25s, transform .25s
+    }
+
+    .vela.off .chama {
+      opacity: 0;
+      transform: scale(.2);
+      animation: none
+    }
+
+    @keyframes tremula {
+      to {
+        transform: rotate(5deg) scaleY(1.1)
+      }
+    }
+
+    #parabens {
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      padding: 1.5rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 2s 1s;
+      background: radial-gradient(circle, #1a0a1ccc 35%, transparent 80%)
+    }
+
+    .festa #parabens {
+      opacity: 1
+    }
+
+    #parabens h2 {
+      font-size: clamp(3rem, 12vw, 5.5rem);
+      line-height: 1.05;
+      text-shadow: 0 0 30px #ff7a9caa
+    }
+
+    #parabens p {
+      max-width: 28ch;
+      line-height: 1.5
+    }
+
+    #parabens .ass {
+      font-size: 2rem;
+      color: #ffdca8
+    }
+
+    #conf {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 40
+    }
+
+    @media (max-height:480px) {
+      #pedido {
+        font-size: 1.5rem;
+        max-width: none
+      }
+
+      .bolo {
+        margin-top: 2.4em
+      }
+
+      .ato {
+        gap: .6rem
+      }
+
+      #final {
+        margin-top: -4rem
+      }
+
+      #final h2 {
+        font-size: 2.4rem
+      }
+
+      #papel {
+        padding: 1rem 1.4rem
+      }
+
+      #texto {
+        font-size: 1.15rem
+      }
+
+      #flor {
+        height: 46vh;
+        width: calc(46vh*.625)
+      }
+
+      #txt {
+        min-height: 0;
+        font-size: 1.05rem
+      }
+
+      #parabens h2 {
+        font-size: 2.6rem
+      }
+
+      #parabens p {
+        font-size: 1rem
+      }
+    }
+
+/* Ato 4: polaroides */
+#tFotos {
+  font-size: clamp(2.4rem, 9vw, 3.4rem);
+  text-shadow: 0 0 30px #ff7a9caa
+}
+
+.pilha {
+  position: relative;
+  width: min(74vw, 46vh, 330px);
+  aspect-ratio: 5/6.1;
+  margin-top: .4rem
+}
+
+.pola {
+  position: absolute;
+  inset: 0;
+  padding: 4.5% 4.5% 0;
+  background: #fff7f0;
+  border-radius: 3px;
+  box-shadow: 0 14px 34px #000a;
+  cursor: pointer;
+  opacity: 0;
+  transform: rotate(var(--r, 0deg));
+  transition: transform .5s ease, opacity .5s
+}
+
+.pola.cai {
+  animation: cai .9s cubic-bezier(.2, 1.2, .4, 1) both
+}
+
+.pola.sai {
+  transform: translateX(120%) rotate(18deg);
+  opacity: 0
+}
+
+.pola img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 2px;
+  background: #2a1128
+}
+
+.pola figcaption {
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  bottom: 0;
+  height: 19%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 1;
+  font-size: clamp(1.3rem, 5.2vw, 1.7rem);
+  color: #8a2a45
+}
+
+@keyframes cai {
+  from {
+    opacity: 0;
+    transform: translateY(-90vh) rotate(calc(var(--r) * 4))
+  }
+
+  to {
+    opacity: 1;
+    transform: rotate(var(--r))
+  }
+}
+
+#dicaFotos {
+  font-style: italic;
+  opacity: .7;
+  margin-top: .6rem
+}
+
+#b3 {
+  position: fixed;
+  left: 50%;
+  bottom: max(1.2rem, env(safe-area-inset-bottom));
+  margin-left: -6.5rem;
+  z-index: 6
+}
+
+@media (max-height:480px) {
+  .pilha {
+    width: min(40vw, 62vh)
+  }
+
+  #tFotos {
+    font-size: 2rem
+  }
+}
